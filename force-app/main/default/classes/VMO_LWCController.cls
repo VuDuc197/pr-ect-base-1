@@ -29,3 +29,4 @@ public with sharing class VMO_LWCController {
         }
     }
 }
+}
