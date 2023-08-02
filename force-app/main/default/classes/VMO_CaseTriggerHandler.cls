@@ -6,18 +6,18 @@
 */
 public with sharing class VMO_CaseTriggerHandler {
     public static Boolean checkUpdate = true; 
-        //handler AfferInsert functions
-	public static void onAfterInsert(List<Case> newcaseList) {
+    //handler AfferInsert functions
+    public static void onAfterInsert(List<Case> newcaseList) {
         completeSubject(newcaseList); 
-	} 
+    } 
     //handler BeforeUpdate functions
-	public static void onBeforeUpdate(List<Case> newcaseList, Map<Id, Case> oldcaseMap) {
+    public static void onBeforeUpdate(List<Case> newcaseList, Map<Id, Case> oldcaseMap) {
         preventSubjectUpdate(newcaseList, oldcaseMap);
     } 
     //handler BeforeInsert functions
-	public static void onBeforeInsert(List<Case> newcaseList) {
+    public static void onBeforeInsert(List<Case> newcaseList) {
         checkfieldSubject(newcaseList);
-	}
+    }
     //completeSubject tự động cập nhật Subject: caseNumber+Subject
     private static void completeSubject(List<Case> newcaseList) {
         List<Case> caseListUpdate = new List<Case>(); 
@@ -36,13 +36,13 @@ public with sharing class VMO_CaseTriggerHandler {
     } 
     //check subject và message yêu cầu nhập subject
     private static void checkfieldSubject(list<case> newcaseList) {
-        for(case caseRec: newcaseList ) {
-            //check field subject có null hay không
-          if(String.isBlank(caseRec.Subject)) {
-                caseRec.Subject.addError(VMO_CommonConstant.SUBJECTNULL_ERROR_MESS);
-          }
+            for(case caseRec: newcaseList ) {
+                //check field subject có null hay không
+                if(String.isBlank(caseRec.Subject)) {
+                    caseRec.Subject.addError(VMO_CommonConstant.SUBJECTNULL_ERROR_MESS);
+                }
+            }
         }
-    }
     //ngăn chặn không cho thay đổi subject khi complete
     private static void preventSubjectUpdate(List<Case> newcaseList, Map<Id, Case> oldcaseMap) {
         //check value cờ checkupdate có thay đổi giá trị có chạy qua compele hay chưa.
