@@ -7,25 +7,25 @@
 public with sharing class VMO_CaseTriggerHandler {
     public static Boolean checkUpdate = true; 
         //handler AfferInsert functions
-	public static void onAfterInsert(List<Case> caseList){
-        completeSubject(caseList); 
+	public static void onAfterInsert(List<Case> newcaseList) {
+        completeSubject(newcaseList); 
 	} 
     //handler BeforeUpdate functions
-	public static void onBeforeUpdate(List<Case> caseList, Map<Id,Case> caseMap){
-        preventSubjectUpdate(caseList, caseMap);
+	public static void onBeforeUpdate(List<Case> newcaseList, Map<Id, Case> oldcaseMap) {
+        preventSubjectUpdate(newcaseList, oldcaseMap);
     } 
     //handler BeforeInsert functions
-	public static void onBeforeInsert(List<Case> caseList){
-        checkfieldSubject(caseList);
+	public static void onBeforeInsert(List<Case> newcaseList) {
+        checkfieldSubject(newcaseList);
 	}
     //completeSubject tự động cập nhật Subject: caseNumber+Subject
-      private static void completeSubject(List<Case> caseList){
+    private static void completeSubject(List<Case> newcaseList) {
         List<Case> caseListUpdate = new List<Case>(); 
-        for (Case caseRec : caseList) {
+        for (Case caseRec : newcaseList) {
             Case newCase = new Case();
             newCase.Id = caseRec.Id;
             //gán giá trị subject mới 
-            newCase.Subject = '[ '+caseRec.CaseNumber+' ]' +'+'+ '{ '+caseRec.Subject+' }';
+            newCase.Subject = '['+caseRec.CaseNumber+']' +'+'+caseRec.Subject;
                 //update tạm thời vào bộ nhớ chưa đẩy vào database
                 caseListUpdate.add(newCase);
             }
@@ -35,21 +35,21 @@ public with sharing class VMO_CaseTriggerHandler {
         update caseListUpdate;    
     } 
     //check subject và message yêu cầu nhập subject
-    private static void checkfieldSubject(list<case> caseList){
-        for(case caseRec: caseList ){
+    private static void checkfieldSubject(list<case> newcaseList) {
+        for(case caseRec: newcaseList ) {
             //check field subject có null hay không
-          if(String.isBlank(caseRec.Subject)){
+          if(String.isBlank(caseRec.Subject)) {
                 caseRec.Subject.addError(VMO_CommonConstant.SUBJECTNULL_ERROR_MESS);
           }
         }
     }
     //ngăn chặn không cho thay đổi subject khi complete
-    private static void preventSubjectUpdate(List<Case> caseList,Map<Id,Case> caseMap){
+    private static void preventSubjectUpdate(List<Case> newcaseList, Map<Id, Case> oldcaseMap) {
         //check value cờ checkupdate có thay đổi giá trị có chạy qua compele hay chưa.
         if(checkUpdate){
-            for(Case caseRec: caseList){
+            for(Case caseRec: newcaseList) {
                 //check giá trị trước và sau của subject
-                if(caseMap.get(caseRec.Id).Subject != caseRec.Subject){
+                if(oldcaseMap.get(caseRec.Id).Subject != caseRec.Subject) {
                         caseRec.Subject.addError(VMO_CommonConstant.PREVENTSUBJECTUPDATE_ERROR_MESS);
                 }
             }
