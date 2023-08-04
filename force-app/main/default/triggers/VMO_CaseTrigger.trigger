@@ -4,7 +4,7 @@
 * Descript: VMO_CaseTrigger
 * PIC: Ducvv.
 */
-trigger VMO_CaseTrigger on Case (before update, before insert, after insert) {
+trigger VMO_CaseTrigger on Case (before update, before insert, after insert, after update) {
     if(Trigger.isBefore && Trigger.isUpdate) {
         VMO_CaseTriggerHandler.onBeforeUpdate(Trigger.new, Trigger.oldMap);
     }
@@ -13,5 +13,8 @@ trigger VMO_CaseTrigger on Case (before update, before insert, after insert) {
     }
     if(Trigger.isAfter && Trigger.isInsert) {
       VMO_CaseTriggerHandler.onAfterInsert(Trigger.new);
+    }
+    if(Trigger.isAfter && Trigger.isUpdate) {
+        VMO_CaseTriggerHandler.onAffterUpdate(Trigger.new, Trigger.oldMap);
     }   
 }

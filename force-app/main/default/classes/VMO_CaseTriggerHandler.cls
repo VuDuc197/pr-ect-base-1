@@ -6,6 +6,10 @@
 */
 public with sharing class VMO_CaseTriggerHandler {
     public static Boolean checkUpdate = true; 
+    //handler AffterUpdate functions
+    public static void onAffterUpdate (List<Case> newcaseList, Map<Id, Case> oldcaseMap) {
+        insertRecTicketHistory(newcaseList, oldcaseMap);
+    }
     //handler AfferInsert functions
     public static void onAfterInsert(List<Case> newcaseList) {
         completeSubject(newcaseList); 
@@ -54,5 +58,57 @@ public with sharing class VMO_CaseTriggerHandler {
                 }
             }
         }
+    }
+    //khi field change thì create record TicketHistory
+    private static void insertRecTicketHistory (List<Case> newcaseList, Map<Id,Case> oldcaseMap) {
+        List<VMO_TicketHistory__c> tagettickethistoryList = new List<VMO_Tickethistory__c>();
+        for (Case newCase : newcaseList) {
+            if(oldcaseMap.get(newCase.Id).Status != newCase.Status) {
+                tagettickethistoryList.add(new VMO_TicketHistory__c (
+                    VMO_FieldName__c = 'Status',
+                    VMO_OldValue__c = oldcaseMap.get(newCase.Id).Status,
+                    VMO_NewValue__c = newCase.Status,
+                    VMO_ChangedTime__c = DateTime.now(),
+                    VMO_RelatedTicket__c = newCase.Id,
+                    VMO_ChangedUser__c = Userinfo.getUserID()
+                )
+                );    
+            }
+            if(oldcaseMap.get(newCase.Id).OwnerId  != newCase.OwnerId ) {
+                tagettickethistoryList.add(new VMO_TicketHistory__c (
+                    VMO_FieldName__c = 'OwnerId',
+                    VMO_OldValue__c = oldcaseMap.get(newCase.Id).OwnerId,
+                    VMO_NewValue__c = newCase.OwnerId,
+                    VMO_ChangedTime__c = DateTime.now(),
+                    VMO_RelatedTicket__c = newCase.Id,
+                    VMO_ChangedUser__c = Userinfo.getUserID()
+                )
+                );
+            }
+            if(oldcaseMap.get(newCase.Id).VMO_Answer__c != newCase.VMO_Answer__c) {
+                tagettickethistoryList.add(new VMO_TicketHistory__c (
+                    VMO_FieldName__c = 'Answer',
+                    VMO_OldValue__c = oldcaseMap.get(newCase.Id).VMO_Answer__c,
+                    VMO_NewValue__c = newCase.VMO_Answer__c,
+                    VMO_ChangedTime__c = DateTime.now(),
+                    VMO_RelatedTicket__c = newCase.Id,
+                    VMO_ChangedUser__c = Userinfo.getUserID()
+                )
+                );
+            }
+            if(oldcaseMap.get(newCase.Id).VMO_TicketHandler__c != newCase.VMO_TicketHandler__c) {
+                tagettickethistoryList.add(new VMO_TicketHistory__c (
+                    VMO_FieldName__c = 'TicketHandler',
+                    VMO_OldValue__c = oldcaseMap.get(newCase.Id).VMO_TicketHandler__c,
+                    VMO_NewValue__c = newCase.VMO_TicketHandler__c,
+                    VMO_ChangedTime__c = DateTime.now(),
+                    VMO_RelatedTicket__c = newCase.Id,
+                    VMO_ChangedUser__c = Userinfo.getUserID()
+                )
+                );
+            }
+        }
+        system.debug('record created : '+tagettickethistoryList);
+        Insert tagettickethistoryList; 
     }
 }  
