@@ -7,7 +7,7 @@
 public with sharing class VMO_CaseTriggerHandler {
     public static Boolean checkUpdate = true; 
     //handler AffterUpdate functions
-    public static void onAffterUpdate (List<Case> newcaseList, Map<Id, Case> oldcaseMap) {
+    public static void onAfterUpdate (List<Case> newcaseList, Map<Id, Case> oldcaseMap) {
         insertRecTicketHistory(newcaseList, oldcaseMap);
     }
     //handler AfferInsert functions
@@ -61,24 +61,44 @@ public with sharing class VMO_CaseTriggerHandler {
     }
     //field change thì create record TicketHistory
     private static void insertRecTicketHistory (List<Case> newcaseList, Map<Id,Case> oldcaseMap) {
-        List<VMO_TicketHistory__c> tagettickethistoryList = new List<VMO_Tickethistory__c>();
-        for(String fieldName : VMO_CommonConstant.LISTFIELDNAMECASE_CHANGE)
+        List<VMO_TicketHistory__c> tagetticketToAdd = new List<VMO_Tickethistory__c>();
+        for(String fieldName : VMO_CommonConstant.LISTFIELDNAMECASE_CHANGE) {
             for (Case newCase : newcaseList) {
                 if(oldcaseMap.get(newCase.Id).get(fieldName) != newCase.get(fieldName)) {
-                    tagettickethistoryList.add(createRecTicketHistory(fieldName, newCase, oldcaseMap.get(newCase.Id))); 
+                    Set<Id> handlerIds = new Set<Id>();
+                        // thêm record vào list có field VMO_TicketHandler thay đổi
+                        if(fieldName != 'VMO_TicketHandler__c') {
+                            handlerIds.add(oldcaseMap.get(newCase.Id).VMO_TicketHandler__c);
+                            handlerIds.add(newCase.VMO_TicketHandler__c);
+                        } else {
+                            tagetticketToAdd.add(createRecTicketHistory(fieldName, newCase, oldcaseMap.get(newCase.Id))); 
+                        }
+                        //xử lí record hiện tên User thay đổi cụ thể của fieldname: VMO_TicketHandler 
+                        if(handlerIds.size() > 0 ) {
+                            Map<Id, User> userMap = new Map<Id, User>([SELECT Id, Name FROM User WHERE Id IN :handlerIds]);
+                            tagetticketToAdd.add(new VMO_TicketHistory__c (
+                                VMO_FieldName__c = 'VMO_TicketHandler__c',
+                                VMO_OldValue__c = userMap.get(oldcaseMap.get(newCase.Id).VMO_TicketHandler__c)?.Name,
+                                VMO_NewValue__c = userMap.get((newCase.VMO_TicketHandler__c))?.Name,
+                                VMO_ChangedTime__c = newCase.LastModifiedDate,
+                                VMO_RelatedTicket__c = newCase.Id,
+                                VMO_ChangedUser__c = newCase.LastModifiedById
+                            ));
+                        }
                 }
-        }
-        Insert tagettickethistoryList; 
-    }   
+            }
+        }   
+        Insert tagetticketToAdd;
+    }
     //create record VMO_TicketHistory
     private static VMO_TicketHistory__c createRecTicketHistory (String fieldName, Case newCase, Case oldcaseMap) {
-        VMO_TicketHistory__c tickethistoryList = new VMO_TicketHistory__c();
-            tickethistoryList.VMO_FieldName__c = fieldName;
-            tickethistoryList.VMO_OldValue__c = String.valueOf(oldcaseMap.get(fieldName));
-            tickethistoryList.VMO_NewValue__c = String.valueOf(newCase.get(fieldName));
-            tickethistoryList.VMO_ChangedTime__c = newCase.LastModifiedDate;
-            tickethistoryList.VMO_RelatedTicket__c = newCase.Id;
-            tickethistoryList.VMO_ChangedUser__c = newCase.LastModifiedById;
-        return tickethistoryList;
+        VMO_TicketHistory__c tagetticketToAdd = new VMO_TicketHistory__c();
+            tagetticketToAdd.VMO_FieldName__c = fieldName;
+            tagetticketToAdd.VMO_OldValue__c = String.valueOf(oldcaseMap.get(fieldName));
+            tagetticketToAdd.VMO_NewValue__c = String.valueOf(newCase.get(fieldName));
+            tagetticketToAdd.VMO_ChangedTime__c = newCase.LastModifiedDate;
+            tagetticketToAdd.VMO_RelatedTicket__c = newCase.Id;
+            tagetticketToAdd.VMO_ChangedUser__c = newCase.LastModifiedById;
+        return tagetticketToAdd;
         }
 }  
