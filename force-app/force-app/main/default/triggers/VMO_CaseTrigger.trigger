@@ -15,6 +15,6 @@ trigger VMO_CaseTrigger on Case (before update, before insert, after insert, aft
       VMO_CaseTriggerHandler.onAfterInsert(Trigger.new);
     }
     if(Trigger.isAfter && Trigger.isUpdate) {
-        VMO_CaseTriggerHandler.onAffterUpdate(Trigger.new, Trigger.oldMap);
+        VMO_CaseTriggerHandler.onAfterUpdate(Trigger.new, Trigger.oldMap);
     }   
 }
