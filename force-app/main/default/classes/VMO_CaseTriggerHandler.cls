@@ -62,10 +62,11 @@ public with sharing class VMO_CaseTriggerHandler {
     //field change thì create record TicketHistory
     private static void insertRecTicketHistory (List<Case> newcaseList, Map<Id,Case> oldcaseMap) {
         List<VMO_TicketHistory__c> tagetticketToAdd = new List<VMO_Tickethistory__c>();
+        Set<Id> handlerIds = new Set<Id>();
+        Map<Id, User> userMap = new Map<Id, User>([SELECT Id, Name FROM User WHERE Id IN :handlerIds]);
         for(String fieldName : VMO_CommonConstant.LISTFIELDNAMECASE_CHANGE) {
             for (Case newCase : newcaseList) {
                 if(oldcaseMap.get(newCase.Id).get(fieldName) != newCase.get(fieldName)) {
-                    Set<Id> handlerIds = new Set<Id>();
                         // thêm record vào list có field VMO_TicketHandler thay đổi
                         if(fieldName != 'VMO_TicketHandler__c') {
                             handlerIds.add(oldcaseMap.get(newCase.Id).VMO_TicketHandler__c);
@@ -75,7 +76,6 @@ public with sharing class VMO_CaseTriggerHandler {
                         }
                         //xử lí record hiện tên User thay đổi cụ thể của fieldname: VMO_TicketHandler 
                         if(handlerIds.size() > 0 ) {
-                            Map<Id, User> userMap = new Map<Id, User>([SELECT Id, Name FROM User WHERE Id IN :handlerIds]);
                             tagetticketToAdd.add(new VMO_TicketHistory__c (
                                 VMO_FieldName__c = 'VMO_TicketHandler__c',
                                 VMO_OldValue__c = userMap.get(oldcaseMap.get(newCase.Id).VMO_TicketHandler__c)?.Name,
