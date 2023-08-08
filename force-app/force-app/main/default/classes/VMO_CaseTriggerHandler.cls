@@ -61,22 +61,22 @@ public with sharing class VMO_CaseTriggerHandler {
     }
     //field change thì create record TicketHistory
     private static void insertRecTicketHistory (List<Case> newcaseList, Map<Id,Case> oldcaseMap) {
-        List<VMO_TicketHistory__c> tagetTicketToAdd = new List<VMO_Tickethistory__c>();
+        List<VMO_TicketHistory__c> targetTicketToAdd = new List<VMO_Tickethistory__c>();
         Set<Id> handlerIds = new Set<Id>();
-        Map<Id, User> userMap = new Map<Id, User>([SELECT Id, Name FROM User WHERE Id IN :handlerIds]);
         for(String fieldName : VMO_CommonConstant.LISTFIELDNAMECASE_CHANGE) {
             for (Case newCase : newcaseList) {
                 if(oldcaseMap.get(newCase.Id).get(fieldName) != newCase.get(fieldName)) {
                         // thêm record vào list có field VMO_TicketHandler thay đổi
-                        if(fieldName != 'VMO_TicketHandler__c') {
+                        if(fieldName == 'VMO_TicketHandler__c') {
                             handlerIds.add(oldcaseMap.get(newCase.Id).VMO_TicketHandler__c);
                             handlerIds.add(newCase.VMO_TicketHandler__c);
                         } else {
-                            tagetTicketToAdd.add(createRecTicketHistory(fieldName, newCase, oldcaseMap.get(newCase.Id))); 
+                            targetTicketToAdd.add(createRecTicketHistory(fieldName, newCase, oldcaseMap.get(newCase.Id))); 
                         }
                         //xử lí record hiện tên User thay đổi cụ thể của fieldname: VMO_TicketHandler 
                         if(handlerIds.size() > 0 ) {
-                            tagetTicketToAdd.add(new VMO_TicketHistory__c (
+                            Map<Id, User> userMap = new Map<Id, User>([SELECT Id, Name FROM User WHERE Id IN :handlerIds]);
+                            targetTicketToAdd.add(new VMO_TicketHistory__c (
                                 VMO_FieldName__c = 'VMO_TicketHandler__c',
                                 VMO_OldValue__c = userMap.get(oldcaseMap.get(newCase.Id).VMO_TicketHandler__c)?.Name,
                                 VMO_NewValue__c = userMap.get((newCase.VMO_TicketHandler__c))?.Name,
@@ -88,17 +88,17 @@ public with sharing class VMO_CaseTriggerHandler {
                 }
             }
         }   
-        Insert tagetTicketToAdd;
+        Insert targetTicketToAdd;
     }
     //create record VMO_TicketHistory
     private static VMO_TicketHistory__c createRecTicketHistory (String fieldName, Case newCase, Case oldcaseMap) {
         VMO_TicketHistory__c tagetTicketToAdd = new VMO_TicketHistory__c();
-            tagetTicketToAdd.VMO_FieldName__c = fieldName;
-            tagetTicketToAdd.VMO_OldValue__c = String.valueOf(oldcaseMap.get(fieldName));
-            tagetTicketToAdd.VMO_NewValue__c = String.valueOf(newCase.get(fieldName));
-            tagetTicketToAdd.VMO_ChangedTime__c = newCase.LastModifiedDate;
-            tagetTicketToAdd.VMO_RelatedTicket__c = newCase.Id;
-            tagetTicketToAdd.VMO_ChangedUser__c = newCase.LastModifiedById;
-        return tagetTicketToAdd;
+            targetTicketToAdd.VMO_FieldName__c = fieldName;
+            targetTicketToAdd.VMO_OldValue__c = String.valueOf(oldcaseMap.get(fieldName));
+            targetTicketToAdd.VMO_NewValue__c = String.valueOf(newCase.get(fieldName));
+            targetTicketToAdd.VMO_ChangedTime__c = newCase.LastModifiedDate;
+            targetTicketToAdd.VMO_RelatedTicket__c = newCase.Id;
+            targetTicketToAdd.VMO_ChangedUser__c = newCase.LastModifiedById;
+        return targetTicketToAdd;
         }
 }  
