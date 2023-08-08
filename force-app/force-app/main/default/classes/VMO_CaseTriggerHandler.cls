@@ -6,11 +6,11 @@
 */
 public with sharing class VMO_CaseTriggerHandler {
     public static Boolean checkUpdate = true; 
-    //handler AffterUpdate functions
+    //handler AfterUpdate functions
     public static void onAfterUpdate (List<Case> newcaseList, Map<Id, Case> oldcaseMap) {
         insertRecTicketHistory(newcaseList, oldcaseMap);
     }
-    //handler AfferInsert functions
+    //handler AferInsert functions
     public static void onAfterInsert(List<Case> newcaseList) {
         completeSubject(newcaseList); 
     } 
