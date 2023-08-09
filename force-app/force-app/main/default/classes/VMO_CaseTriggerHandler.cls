@@ -6,11 +6,11 @@
 */
 public with sharing class VMO_CaseTriggerHandler {
     public static Boolean checkUpdate = true; 
-    //handler AfterUpdate functions
+    //handler AffterUpdate functions
     public static void onAfterUpdate (List<Case> newcaseList, Map<Id, Case> oldcaseMap) {
         insertRecTicketHistory(newcaseList, oldcaseMap);
     }
-    //handler AferInsert functions
+    //handler AfferInsert functions
     public static void onAfterInsert(List<Case> newcaseList) {
         completeSubject(newcaseList); 
     } 
@@ -60,22 +60,38 @@ public with sharing class VMO_CaseTriggerHandler {
         }
     }
     //field change thì create record TicketHistory
-    private static void insertRecTicketHistory (List<Case> newcaseList, Map<Id,Case> oldcaseMap) {
-        List<VMO_TicketHistory__c> targetTicketToAdd = new List<VMO_Tickethistory__c>();
-        Set<Id> handlerIds = new Set<Id>();
+    private static void insertRecTicketHistory (List<Case> newcaseList, Map<Id, Case> oldcaseMap) {
         for(String fieldName : VMO_CommonConstant.LISTFIELDNAMECASE_CHANGE) {
+            Set<Id> handlerIds = new Set<Id>();
             for (Case newCase : newcaseList) {
-                if(oldcaseMap.get(newCase.Id).get(fieldName) != newCase.get(fieldName)) {
-                        // thêm record vào list có field VMO_TicketHandler thay đổi
-                        if(fieldName == 'VMO_TicketHandler__c') {
-                            handlerIds.add(oldcaseMap.get(newCase.Id).VMO_TicketHandler__c);
-                            handlerIds.add(newCase.VMO_TicketHandler__c);
-                        } else {
-                            targetTicketToAdd.add(createRecTicketHistory(fieldName, newCase, oldcaseMap.get(newCase.Id))); 
-                        }
-                        //xử lí record hiện tên User thay đổi cụ thể của fieldname: VMO_TicketHandler 
-                        if(handlerIds.size() > 0 ) {
-                            Map<Id, User> userMap = new Map<Id, User>([SELECT Id, Name FROM User WHERE Id IN :handlerIds]);
+                createRecTicketHistory(fieldName, newCase, oldcaseMap);
+                }                   
+            }      
+        }
+    //create record VMO_TicketHistory
+    private static void createRecTicketHistory (String fieldName, Case newCase, Map<Id, Case> oldcaseMap) {
+        List<VMO_TicketHistory__c> targetTicketToAdd = new List<VMO_TicketHistory__c>();
+        if((String) oldcaseMap.get(newCase.Id).get(fieldName) != (String) newCase.get(fieldName)) {
+            Set<Id> handlerIds = new Set<Id>();
+            //thay đổi field VMO_TicketHandler__c thì add vào list HandlerIds
+            if(fieldName == 'VMO_TicketHandler__c') {
+                handlerIds.add(oldcaseMap.get(newCase.Id).VMO_TicketHandler__c);
+                handlerIds.add(newCase.VMO_TicketHandler__c);
+            }
+            //tạo create record với các field khác
+            else {
+              targetTicketToAdd.add(new VMO_TicketHistory__c(
+                    VMO_FieldName__c = fieldName,
+                    VMO_OldValue__c = (String) oldcaseMap.get(newCase.Id).get(fieldName),
+                    VMO_NewValue__c = (String) newCase.get(fieldName),
+                    VMO_ChangedTime__c = newCase.LastModifiedDate,
+                    VMO_RelatedTicket__c = newCase.Id,
+                    VMO_ChangedUser__c = newCase.LastModifiedById
+                ));     
+            }
+            //xử lí list Handler map với Object User để lấy fullName người thay đổi.
+            if(handlerIds.size() > 0 ) {
+               Map<Id, User> userMap = new Map<Id, User>([SELECT Id, Name FROM User WHERE Id IN :handlerIds]);
                             targetTicketToAdd.add(new VMO_TicketHistory__c (
                                 VMO_FieldName__c = 'VMO_TicketHandler__c',
                                 VMO_OldValue__c = userMap.get(oldcaseMap.get(newCase.Id).VMO_TicketHandler__c)?.Name,
@@ -84,21 +100,8 @@ public with sharing class VMO_CaseTriggerHandler {
                                 VMO_RelatedTicket__c = newCase.Id,
                                 VMO_ChangedUser__c = newCase.LastModifiedById
                             ));
-                        }
-                }
             }
-        }   
-        Insert targetTicketToAdd;
-    }
-    //create record VMO_TicketHistory
-    private static VMO_TicketHistory__c createRecTicketHistory (String fieldName, Case newCase, Case oldcaseMap) {
-        VMO_TicketHistory__c tagetTicketToAdd = new VMO_TicketHistory__c();
-            targetTicketToAdd.VMO_FieldName__c = fieldName;
-            targetTicketToAdd.VMO_OldValue__c = String.valueOf(oldcaseMap.get(fieldName));
-            targetTicketToAdd.VMO_NewValue__c = String.valueOf(newCase.get(fieldName));
-            targetTicketToAdd.VMO_ChangedTime__c = newCase.LastModifiedDate;
-            targetTicketToAdd.VMO_RelatedTicket__c = newCase.Id;
-            targetTicketToAdd.VMO_ChangedUser__c = newCase.LastModifiedById;
-        return targetTicketToAdd;
         }
-}  
+        Insert targetTicketToAdd; 
+    }
+}   
