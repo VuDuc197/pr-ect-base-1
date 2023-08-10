@@ -24,19 +24,19 @@ public with sharing class VMO_CaseTriggerHandler {
     }
     //completeSubject tự động cập nhật Subject: caseNumber+Subject
     private static void completeSubject(List<Case> newCaseList) {
-        List<Case> caseListUpdate = new List<Case>(); 
+        List<Case> updateCaseList = new List<Case>(); 
         for (Case caseRec : newCaseList) {
             Case newCase = new Case();
             newCase.Id = caseRec.Id;
             //gán giá trị subject mới 
             newCase.Subject = '['+caseRec.CaseNumber+']' +'+'+caseRec.Subject;
                 //update tạm thời vào bộ nhớ chưa đẩy vào database
-                caseListUpdate.add(newCase);
+                updateCaseList.add(newCase);
             }
             //gán lại giá trị của cờ khi đã chạy complete
         checkUpdate = false;
             //update list vào data base.
-        update caseListUpdate;    
+        update updateCaseList;    
     } 
     //check subject và message yêu cầu nhập subject
     private static void checkfieldSubject(list<case> newCaseList) {
@@ -63,33 +63,34 @@ public with sharing class VMO_CaseTriggerHandler {
     private static void insertRecTicketHistory (List<Case> newCaseList, Map<Id, Case> oldCaseMap) {
         Set<Id> handlerIds = new Set<Id>();
             List<VMO_TicketHistory__c> targetTicketToAdd = new List<VMO_TicketHistory__c>();
-                //gán giá trị vào handlerIds
+                //gán giá trị id User nằm trong field VMO_TicketHanlder vào handlerIds
                 for (Case newCase : newCaseList) {
                     if(newCase.VMO_TicketHandler__c != oldCaseMap.get(newCase.Id).VMO_TicketHandler__c) {
-                    handlerIds.add(oldCaseMap.get(newCase.Id).VMO_TicketHandler__c);
-                    handlerIds.add(newCase.VMO_TicketHandler__c);
+                        handlerIds.add(oldCaseMap.get(newCase.Id).VMO_TicketHandler__c);
+                        handlerIds.add(newCase.VMO_TicketHandler__c);
                     }
                 }
+                //Tạo map truyền list User vào trong map với soql: Id = handlerIds.
                 Map<Id, User> userMap = new Map<Id, User>(VMO_UserDAO.getFullName(handlerIds));
                 for(String fieldName : VMO_CommonConstant.LISTFIELDNAMECASE_CHANGE) {
                     for (Case newCase : newCaseList) {
                         if((String) oldcaseMap.get(newCase.Id).get(fieldName) != (String) newCase.get(fieldName)) {
-                            String oldVal = VMO_CommonConstant.CHAINNULL;
-                            String newVal = VMO_CommonConstant.CHAINNULL;
+                            String oldVal = VMO_CommonConstant.CHAIN_NULL;
+                            String newVal = VMO_CommonConstant.CHAIN_NULL;
                         //gán fullname vào old - new
-                        if(fieldName == VMO_CommonConstant.FIELDNAMETICKET) {
-                            oldVal = userMap.get(oldcaseMap.get(newCase.Id).VMO_TicketHandler__c)?.Name;
+                        if(fieldName == VMO_CommonConstant.FIELDNAME_TICKET) {
+                            oldVal = userMap.get(oldCaseMap.get(newCase.Id).VMO_TicketHandler__c)?.Name;
                             newVal = userMap.get(newCase.VMO_TicketHandler__c)?.Name;
                         } else {
-                            oldVal = (String) oldcaseMap.get(newCase.Id).get(fieldName);
+                            oldVal = (String) oldCaseMap.get(newCase.Id).get(fieldName);
                             newVal = (String) newCase.get(fieldName);
                             }
-                        //add rec vào list
-                        targetTicketToAdd.add(new VMO_TicketHistory__c(
+                        //add rec vào list  
+                        targetTicketToAdd.add(new VMO_TicketHistory__c (
                             VMO_FieldName__c = fieldName,
                             VMO_OldValue__c = oldVal,
                             VMO_NewValue__c = newVal,
-                            VMO_ChangedTime__c = newCase.LastModifiedDate,
+                            VMO_ChangedTime__c = DateTime.now(),
                             VMO_RelatedTicket__c = newCase.Id,
                             VMO_ChangedUser__c = newCase.LastModifiedById
                         ));

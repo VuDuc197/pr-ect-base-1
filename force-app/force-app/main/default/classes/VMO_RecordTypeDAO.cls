@@ -4,7 +4,7 @@
  * Descript: Data Access Object to query from User object
  * PIC: LocHN
 */
-public with sharing class VMO_UserDAO {
+public with sharing class VMO_RecordTypeDAO {
         // get current user information
         public static User getUserInfo(Id usrID) {
             List<User> usrQuery = [SELECT Id, 
@@ -18,12 +18,5 @@ public with sharing class VMO_UserDAO {
                                    WHERE Id =: Userinfo.getUserid()];
             return usrQuery.size() > 0 ? usrQuery[0] : null;
         }
-        public static User getFullName(Set<Id> handerIds) {
-           List<User> usrQueryName = ([SELECT Id,
-                                         Name 
-                                         FROM User 
-                                         WHERE Id 
-                                         IN :handerIds]);
-            return usrQueryName.size() > 0 ? usrQueryName[0] : null;
-        }
+     
 }

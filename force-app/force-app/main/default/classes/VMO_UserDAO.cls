@@ -5,7 +5,6 @@
  * PIC: LocHN
 */
 public with sharing class VMO_UserDAO {
-    public VMO_UserDAO() {
         // get current user information
         public static User getUserInfo(Id usrID) {
             List<User> usrQuery = [SELECT Id, 
@@ -14,9 +13,16 @@ public with sharing class VMO_UserDAO {
                                    Name,
                                    Title,
                                    FullPhotoUrl,
-                                   CompanyName,
+                                   CompanyName
                                    FROM User 
                                    WHERE Id =: Userinfo.getUserid()];
             return usrQuery.size() > 0 ? usrQuery[0] : null;
     }
+       public static List<User> getFullName(Set<Id> handerIds) {
+            return [SELECT Id,
+                                    Name 
+                                    FROM User 
+                                    WHERE Id 
+                                    IN :handerIds];
+        }
 }
