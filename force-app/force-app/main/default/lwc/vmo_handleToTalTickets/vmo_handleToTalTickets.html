@@ -1,0 +1,27 @@
+<template>
+    <div class='header'> Helpdesk Ticket Realtime Tracking</div>
+    <div class="c-container">
+        <lightning-layout class="">
+            <lightning-layout-item class="">
+                <div> Total Tickets</div>
+                <div>{handleTotalTickets}</div>
+            </lightning-layout-item>
+            <lightning-layout-item>
+                <div> Total This Month</div>
+                <div>{handleTotalThisMonth}</div>
+            </lightning-layout-item>
+            <lightning-layout-item>
+                <div> TotalOpen</div>
+                <div>{handleTotalOpen}</div>
+            </lightning-layout-item>
+            <lightning-layout-item>
+                <div> TotalProcessing</div>
+                <div>{handleTotalProcessing}</div>
+            </lightning-layout-item>
+            <lightning-layout-item>
+                <div> TotalClosed</div>
+                <div>{handleTotalClosed}</div>
+            </lightning-layout-item>
+        </lightning-layout>
+    </div>
+</template>
