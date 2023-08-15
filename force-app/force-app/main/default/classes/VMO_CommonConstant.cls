@@ -14,4 +14,5 @@ public with sharing class VMO_CommonConstant {
         public static List<String> LISTFIELDNAMECASE_CHANGE = new list<String> {'Status', 'OwnerId', 'VMO_Answer__c', 'VMO_TicketHandler__c'};
         public static String CHAIN_NULL = '';
         public static String FIELDNAME_TICKET = 'VMO_TicketHandler__c';
+        public static String CHAIN_NEW = 'New';
 }

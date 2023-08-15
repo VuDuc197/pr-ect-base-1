@@ -5,29 +5,41 @@
  * PIC: Ducvv
 */
 public with sharing class vmo_CaseController {
-    @AuraEnabled(cacheable=true)
-    public static Integer handleTotalTickets() {
-        Integer totalTickets  = [SELECT COUNT(Id) FROM Case];
+    // count tổng số Case 
+    @AuraEnabled(cacheable = true)
+    public static Integer getToTalTickets() { 
+        Integer totalTickets = [SELECT COUNT() FROM Case];
         return totalTickets;
     }
-    @AuraEnabled(cacheable=true)
-    public static Integer handleToTalThisMoth() {
-        Integer totalThisMonth = [SELECT COUNT(Id) FROM Case WHERE CreatedDate IN (THIS_MONTH)];
+    //count tổng số case trong tháng.
+    @AuraEnabled(cacheable = true)
+    public static Integer getToTalThisMonth() {
+        Integer totalThisMonth = [SELECT COUNT() FROM Case WHERE CreatedDate = THIS_MONTH];
         return totalThisMonth;
     }
-    @AuraEnabled(cacheable=true)
-    public static Integer handleToTalOpen() {
-        Integer ToTalOpen = [SELECT COUNT(Id) FROM Case WHERE Status IN ('New')];
+    //count tổng số case thỏa mãn đk Case.Status = "New"
+    @AuraEnabled(cacheable = true)
+    public static Integer getToTalOpen() {
+        Integer ToTalOpen = [SELECT COUNT() 
+                                    FROM Case 
+                                    WHERE Status = 'New']; 
         return ToTalOpen;
     }
-    @AuraEnabled(cacheable=true)
-    public static Integer handleToTalProcessing() {
-        Integer totalProcessing = [SELECT COUNT(Id) FROM Case WHERE Status NOT IN ('new')];
+    //count tổng số case thỏa mãn đk Case.Status != "New" && Case.isClosed= false
+    @AuraEnabled(cacheable = true)
+    public static Integer getToTalProcessing() {
+        Integer totalProcessing = [SELECT COUNT() 
+                                    FROM Case 
+                                    WHERE Status != 'New'
+                                    AND IsClosed = FALSE];
         return totalProcessing;
     }
-    @AuraEnabled(cacheable=true)
-    public static Integer handleToTalClosed() {
-        Integer totalClosed= [SELECT COUNT(Id) FROM Case WHERE Status IN ('')];
+    //count tổng số case thỏa mãn đk Case.isClosed= true
+    @AuraEnabled(cacheable = true)
+    public static Integer getToTalClosed() {
+        Integer totalClosed= [SELECT COUNT() 
+                                    FROM Case 
+                                    WHERE IsClosed = True ];
         return totalClosed;
     }
 }

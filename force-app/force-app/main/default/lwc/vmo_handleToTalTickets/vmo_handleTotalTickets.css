@@ -1,0 +1,47 @@
+.main_layout {
+    background: white;
+    height: 100vh;
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+}
+
+.wrapper_header {
+    background-color: blue;
+    color: white;
+    height: 40px;
+    font-size: 16px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    place-content: center;
+
+}
+.wrapper_footer {
+    background-color: blue;
+    height: 10px;
+    display: flex;
+    color: white;
+    font-size: 16px;
+    font-weight: 600;
+    align-items: center;
+    place-content: center;
+}
+.wrapper_body {
+    display: flex;
+    align-content: center;
+    justify-content: space-evenly
+}
+.wrapper_body_field {
+    box-sizing: border-box;
+    text-align: center;
+    font-family: auto;
+    font-size: initial;
+    color: rgb(199, 192, 191);
+}
+.wrapper_body_val {
+    text-align: center;
+    font-family: auto;
+    font-size: large;
+    color: rgb(199, 192, 191);
+}
