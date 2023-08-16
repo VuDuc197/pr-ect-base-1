@@ -1,0 +1,61 @@
+<template>
+    <div>
+        <div>
+            <div>Vũ Văn Đức {fullName}</div>
+            <div>Developer{prosionUser}</div>
+        </div>
+        <div>
+            <img src="https://www.w3schools.com/howto/img_avatar.png"
+                style="height: 10em;  width: 10em;  clip-path: circle(50%);">
+        </div>
+    </div>
+    <div>
+        <div>
+            <h3> Mã nhân viên </h3>
+            <input type="text" size="8">
+        </div>
+        <div>
+            <h3> Email </h3>
+            <input type="email" size="25">
+        </div>
+        <div>
+            <h3> Ngày sinh</h3>
+            <input type="date" size="25">
+        </div>
+
+    </div>
+    <div>
+        <div class="layout-input">
+            <div>
+                <lightning-input type="text" label="Subject"></lightning-input>
+            </div>
+            <div>
+                <lightning-combobox name="progress" label="Ticket Type" value={value} placeholder="Select Progress"
+                    options={options} onchange={handleChange}></lightning-combobox>
+            </div>
+            <div>
+                <lightning-combobox name="progress" label="Status" value={value} placeholder="Select Progress"
+                    options={options} onchange={handleChange}></lightning-combobox>
+            </div>
+            <div>
+                <lightning-combobox name="progress" label="Category" value={value} placeholder="Select Progress"
+                    options={options} onchange={handleChange}></lightning-combobox>
+            </div>
+            <div>
+                <lightning-input type="datetime" name="StartDate" label="Start Date"></lightning-input>
+            </div>
+            <div>
+                <lightning-input type="datetime" name="EndDate" label="End Date"></lightning-input>
+            </div>
+
+        </div>
+    </div>
+    <div class="layout-button">
+        <div>
+            <lightning-button variant="base" label="Add" onclick={handleClick}>Add</lightning-button>
+        </div>
+        <div>
+            <lightning-button variant="base" label="Search" onclick={handleClick}>Search</lightning-button>
+        </div>
+    </div>
+</template>
