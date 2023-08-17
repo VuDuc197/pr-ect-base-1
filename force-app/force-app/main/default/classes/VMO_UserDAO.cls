@@ -14,6 +14,7 @@ public with sharing class VMO_UserDAO {
                                    Title,
                                    FullPhotoUrl,
                                    CompanyName
+                                   
                                    FROM User 
                                    WHERE Id =: Userinfo.getUserid()];
             return usrQuery.size() > 0 ? usrQuery[0] : null;
@@ -24,5 +25,9 @@ public with sharing class VMO_UserDAO {
                                     FROM User 
                                     WHERE Id 
                                     IN :handerIds];
+        }
+        public static List<user> getUserAllInfor() {
+               return [SELECT Id, Name, VMO_StaffCode__c, VMO_BirthDate__c, FullPhotoUrl, Email, Title 
+                                FROM User where Id =: UserInfo.getUserId()];
         }
 }

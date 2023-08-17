@@ -1,61 +1,82 @@
 <template>
-    <div>
-        <div>
-            <div>Vũ Văn Đức {fullName}</div>
-            <div>Developer{prosionUser}</div>
-        </div>
-        <div>
-            <img src="https://www.w3schools.com/howto/img_avatar.png"
-                style="height: 10em;  width: 10em;  clip-path: circle(50%);">
-        </div>
-    </div>
-    <div>
-        <div>
-            <h3> Mã nhân viên </h3>
-            <input type="text" size="8">
-        </div>
-        <div>
-            <h3> Email </h3>
-            <input type="email" size="25">
-        </div>
-        <div>
-            <h3> Ngày sinh</h3>
-            <input type="date" size="25">
-        </div>
-
-    </div>
-    <div>
-        <div class="layout-input">
-            <div>
-                <lightning-input type="text" label="Subject"></lightning-input>
+    <div class="main_layout">
+        <div class="wrapper_header">
+            <div class="user_info_header">
+                <div>{usrData.Name}</div>
+                <div>
+                    <Developer>usrData.tile</Developer>
+                </div>
             </div>
-            <div>
-                <lightning-combobox name="progress" label="Ticket Type" value={value} placeholder="Select Progress"
-                    options={options} onchange={handleChange}></lightning-combobox>
-            </div>
-            <div>
-                <lightning-combobox name="progress" label="Status" value={value} placeholder="Select Progress"
-                    options={options} onchange={handleChange}></lightning-combobox>
-            </div>
-            <div>
-                <lightning-combobox name="progress" label="Category" value={value} placeholder="Select Progress"
-                    options={options} onchange={handleChange}></lightning-combobox>
-            </div>
-            <div>
-                <lightning-input type="datetime" name="StartDate" label="Start Date"></lightning-input>
-            </div>
-            <div>
-                <lightning-input type="datetime" name="EndDate" label="End Date"></lightning-input>
+            <div class="user_avatar_header">
+                <img src={usrData.FullPhotoUrl}>
             </div>
 
         </div>
-    </div>
-    <div class="layout-button">
-        <div>
-            <lightning-button variant="base" label="Add" onclick={handleClick}>Add</lightning-button>
+        <div class="separate_line"></div>
+        <div class="wrapper_body flex-row">
+            <div class="wrapper_body_user_info">
+                <div class="info_box flex-row">
+                    <div> Mã nhân viên </div>
+                    <input disabled type="text" size="25" value={usrData.VMO_StaffCode__c} />
+                </div>
+                <div class="info_box flex-row">
+                    <div> Email</div>
+                    <input disabled type="email" size="25" value={usrData.Email} />
+                </div>
+                <div class="info_box flex-row">
+                    <div> Ngày sinh </div>
+                    <input disabled type="date" size="25" value={usrData.VMO_BirthDate__c} />
+                </div>
+            </div>
+            <div class="wrapper_body_search">
+                <div class="wrapper_body_search_user_field flex-row">
+                    <div>
+                        <div class="type_field_tile">Subject</div>
+                        <input class="input_field" />
+                    </div>
+                    <div>
+                        <div class="type_field_tile">Ticket Type</div>
+                        <select class="dropdown_box" aria-placeholder="Select an Option">
+                            <option value="">Select an Option</option>
+                            <option>Home work</option>
+                            <option>Clean the house</option>
+                            <option>Sleeping</option>
+                        </select>
+                    </div>
+                    <div>
+                        <div class="type_field_tile"> Status </div>
+                        <select class="dropdown_box" aria-placeholder="Select an Option">
+                            <option value="">Select an Option</option>
+                            <option>open</option>
+                            <option>Processing</option>
+                            <option>Closed</option>
+                        </select>
+                    </div>
+                    <div>
+                        <div class="type_field_tile"> Category </div>
+                        <select class="dropdown_box" aria-placeholder="Select an Option">
+                            <option value="">Select an Option</option>
+                            <option>Category 1</option>
+                            <option>Category 2</option>
+                            <option>Category 3</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="wrapper_body_search_user_field flex-row">
+                    <div>
+                        <div class="type_field_tile"> Start Date</div>
+                        <input type="date" />
+                    </div>
+                    <div>
+                        <div class="type_field_tile"> End Date</div>
+                        <input type="date" />
+                    </div>
+                </div>
+            </div>
         </div>
-        <div>
-            <lightning-button variant="base" label="Search" onclick={handleClick}>Search</lightning-button>
+        <div class="wrapper_layout-button">
+            <button class="btn_save"> Add</button>
+            <button class="btn_search">Search</button>
         </div>
     </div>
 </template>
