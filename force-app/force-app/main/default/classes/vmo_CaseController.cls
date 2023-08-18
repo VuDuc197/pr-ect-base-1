@@ -33,5 +33,20 @@ public with sharing class vmo_CaseController {
    public static Integer getToTalClosed() {
        Integer totalClosed= VMO_CaseDAO.getCaseClosed();
        return totalClosed;
-   }
+    }
+    @AuraEnabled(cacheable = true)
+    public static List<AggregateResult> getStatusResult() {
+       List<AggregateResult> listStatusResult = VMO_CaseDAO.getStatus();
+        return listStatusResult;
+    }
+    @AuraEnabled(cacheable = true)
+    public static List<AggregateResult> getCategoryResult() {
+       List<AggregateResult> listCategoryResult = VMO_CaseDAO.getCategory();
+        return listCategoryResult;
+    }
+    @AuraEnabled(cacheable = true)
+    public static List<AggregateResult> getTicketTypeResult() {
+       List<AggregateResult> listTicketTypeResult = VMO_CaseDAO.getTicketType();
+        return listTicketTypeResult;
+    }
 }

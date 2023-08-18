@@ -26,8 +26,11 @@ public with sharing class VMO_UserDAO {
                                     WHERE Id 
                                     IN :handerIds];
         }
-        public static List<user> getUserAllInfor() {
+        public static User getUserAllInfo() {
+                system.debug('ID : ' +  UserInfo.getUserId());
                return [SELECT Id, Name, VMO_StaffCode__c, VMO_BirthDate__c, FullPhotoUrl, Email, Title 
-                                FROM User where Id =: UserInfo.getUserId()];
-        }
+                                FROM User 
+                                WHERE Id =: UserInfo.getUserId()];
+
+     }
 }

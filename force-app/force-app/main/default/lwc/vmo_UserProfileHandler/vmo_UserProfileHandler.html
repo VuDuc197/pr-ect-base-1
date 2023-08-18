@@ -2,13 +2,11 @@
     <div class="main_layout">
         <div class="wrapper_header">
             <div class="user_info_header">
-                <div>{usrData.Name}</div>
-                <div>
-                    <Developer>usrData.tile</Developer>
-                </div>
+                <p>{usr_fullName}</p>
+                <p>{usr_Title}</p>
             </div>
             <div class="user_avatar_header">
-                <img src={usrData.FullPhotoUrl}>
+                <img src={usr_currentPhotoUrl}>
             </div>
 
         </div>
@@ -17,66 +15,54 @@
             <div class="wrapper_body_user_info">
                 <div class="info_box flex-row">
                     <div> Mã nhân viên </div>
-                    <input disabled type="text" size="25" value={usrData.VMO_StaffCode__c} />
+                    <input disabled type="text" size="25" value={usr_staffCode} />
                 </div>
                 <div class="info_box flex-row">
                     <div> Email</div>
-                    <input disabled type="email" size="25" value={usrData.Email} />
+                    <input disabled type="email" size="25" value={usr_Email} />
                 </div>
                 <div class="info_box flex-row">
                     <div> Ngày sinh </div>
-                    <input disabled type="date" size="25" value={usrData.VMO_BirthDate__c} />
+                    <input disabled type="date" size="25" value={usr_birthDate} />
                 </div>
             </div>
             <div class="wrapper_body_search">
                 <div class="wrapper_body_search_user_field flex-row">
                     <div>
-                        <div class="type_field_tile">Subject</div>
-                        <input class="input_field" />
+                        <lightning-input type="text" label="Subject"></lightning-input>
                     </div>
                     <div>
-                        <div class="type_field_tile">Ticket Type</div>
-                        <select class="dropdown_box" aria-placeholder="Select an Option">
-                            <option value="">Select an Option</option>
-                            <option>Home work</option>
-                            <option>Clean the house</option>
-                            <option>Sleeping</option>
-                        </select>
+                        <lightning-combobox name="ticket_type" label="Ticket Type" value={ticket_type}
+                            placeholder="Select an options" options={optTicketType}
+                            onchange={handleChange}></lightning-combobox>
                     </div>
                     <div>
-                        <div class="type_field_tile"> Status </div>
-                        <select class="dropdown_box" aria-placeholder="Select an Option">
-                            <option value="">Select an Option</option>
-                            <option>open</option>
-                            <option>Processing</option>
-                            <option>Closed</option>
-                        </select>
+                        <lightning-combobox name="Status" label="Status" value={Status} placeholder="Select an options"
+                            options={optStatus} onchange={handleChange}></lightning-combobox>
                     </div>
                     <div>
-                        <div class="type_field_tile"> Category </div>
-                        <select class="dropdown_box" aria-placeholder="Select an Option">
-                            <option value="">Select an Option</option>
-                            <option>Category 1</option>
-                            <option>Category 2</option>
-                            <option>Category 3</option>
-                        </select>
+                        <lightning-combobox name="Category" label="Category" value={Category}
+                            placeholder="Select an options" options={optCategory}
+                            onchange={handleChange}></lightning-combobox>
                     </div>
                 </div>
                 <div class="wrapper_body_search_user_field flex-row">
                     <div>
-                        <div class="type_field_tile"> Start Date</div>
-                        <input type="date" />
+                        <lightning-input type="date" name="StartDate" label="StartDate"></lightning-input>
                     </div>
                     <div>
-                        <div class="type_field_tile"> End Date</div>
-                        <input type="date" />
+                        <lightning-input type="date" name="EndDate" label="EndDate"></lightning-input>
                     </div>
                 </div>
             </div>
         </div>
-        <div class="wrapper_layout-button">
-            <button class="btn_save"> Add</button>
-            <button class="btn_search">Search</button>
+        <div>
+            <div class="wrapper_layout_button_left">
+                <lightning-button variant="Add" label="Add" onclick={handleClick}></lightning-button>
+            </div>
+            <div class="wrapper_layout_button_right">
+                <lightning-button variant="Search" label=" Search" onclick={handleClick}></lightning-button>
+            </div>
         </div>
     </div>
 </template>

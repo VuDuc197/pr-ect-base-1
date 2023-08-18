@@ -66,9 +66,11 @@
 
 .wrapper_body_user_info {
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
     flex-wrap: wrap;
-    justify-content: space-between
+    justify-content: space-between;
+    width: 20vh;
+    height: 40vh;
 }
 
 .wrapper_body_user_info_box {
@@ -106,6 +108,15 @@
 
 .type_field_title {
     font-size: 10px;
+}
+.wrapper_layout-button {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    width: 20vh;
+    height: 40v;
+
 }
 
 .dropdown_box {

@@ -6,9 +6,9 @@
 */
 public with sharing class vmo_UserController {
     @AuraEnabled(cacheable=true)
-    public static List<User> getUserInfor() {
-        List<User> targetUsr = new List<User>();
-         targetUsr =  VMO_UserDAO.getUserAllInfor();
+    public static User getUserInfo() {
+        User targetUsr = VMO_UserDAO.getUserAllInfo();
+         system.debug('targetUsr' + targetUsr);
          return targetUsr;
     }
 }
