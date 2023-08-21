@@ -34,19 +34,54 @@ public with sharing class vmo_CaseController {
        Integer totalClosed= VMO_CaseDAO.getCaseClosed();
        return totalClosed;
     }
-    @AuraEnabled(cacheable = true)
-    public static List<AggregateResult> getStatusResult() {
-       List<AggregateResult> listStatusResult = VMO_CaseDAO.getStatus();
-        return listStatusResult;
+   
+    public class SelectOption {
+        @AuraEnabled public String label {get; set;}
+        @AuraEnabled public String value {get; set;}
+        public SelectOption(){
+            this.value = VMO_CommonConstant.CHAIN_NULL;
+            this.label = VMO_CommonConstant.CHAIN_NULL;
+        }
+        public SelectOption(String value, String label) {
+            this.value = value;
+            this.label = label;
+        }
     }
-    @AuraEnabled(cacheable = true)
-    public static List<AggregateResult> getCategoryResult() {
-       List<AggregateResult> listCategoryResult = VMO_CaseDAO.getCategory();
-        return listCategoryResult;
-    }
-    @AuraEnabled(cacheable = true)
-    public static List<AggregateResult> getTicketTypeResult() {
-       List<AggregateResult> listTicketTypeResult = VMO_CaseDAO.getTicketType();
-        return listTicketTypeResult;
+    @AuraEnabled
+    public static List<SelectOption> getPickListStatus() {
+        List<SelectOption> optionsStatus = new List<SelectOption>();
+                Schema.DescribeFieldResult fieldResult = Case.Status.getDescribe();
+                    List<Schema.PicklistEntry> fieldList = fieldResult.getPicklistValues();
+                    optionsStatus.add(new SelectOption('','--None--'));
+                            for( Schema.PicklistEntry fieldItem : fieldList) {
+                                optionsStatus.add(new SelectOption(fieldItem.getLabel(), fieldItem.getValue()));
+                                    }             
+            return optionsStatus;
+        }
+    @AuraEnabled
+    public static List<SelectOption> getPickListCategory() {
+        List<SelectOption> optionsCategory = new List<SelectOption>();
+                Schema.DescribeFieldResult fieldResult = Case.VMO_Category__c.getDescribe();
+                    List<Schema.PicklistEntry> fieldList = fieldResult.getPicklistValues();
+                    optionsCategory.add(new SelectOption('','--None--'));
+                            for( Schema.PicklistEntry fieldItem : fieldList) {
+                                optionsCategory.add(new SelectOption(fieldItem.getLabel(), fieldItem.getValue()));
+                                    }   
+            return optionsCategory;
+        }
+    @AuraEnabled
+    public static List<SelectOption> getPickListType() {
+        List<SelectOption> optionsType = new List<SelectOption>();
+                Schema.DescribeFieldResult fieldResult = Case.Type.getDescribe();
+                    List<Schema.PicklistEntry> fieldList = fieldResult.getPicklistValues();
+                    optionsType.add(new SelectOption('','--None--'));
+                            for( Schema.PicklistEntry fieldItem : fieldList) {
+                                optionsType.add(new SelectOption(fieldItem.getLabel(), fieldItem.getValue()));
+                                    }   
+            return optionsType;
+        }   
+    @AuraEnabled(cacheable=true)
+    public static void getSearchValue (String value) {
+        System.debug(value);
     }
 }

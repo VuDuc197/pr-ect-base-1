@@ -11,56 +11,65 @@
 
         </div>
         <div class="separate_line"></div>
-        <div class="wrapper_body flex-row">
-            <div class="wrapper_body_user_info">
-                <div class="info_box flex-row">
-                    <div> Mã nhân viên </div>
-                    <input disabled type="text" size="25" value={usr_staffCode} />
-                </div>
-                <div class="info_box flex-row">
-                    <div> Email</div>
-                    <input disabled type="email" size="25" value={usr_Email} />
-                </div>
-                <div class="info_box flex-row">
-                    <div> Ngày sinh </div>
-                    <input disabled type="date" size="25" value={usr_birthDate} />
-                </div>
-            </div>
-            <div class="wrapper_body_search">
-                <div class="wrapper_body_search_user_field flex-row">
-                    <div>
-                        <lightning-input type="text" label="Subject"></lightning-input>
+        <div class="wrapper_body">
+            <div class="wrapper_body flex-row">
+                <div class="wrapper_body_user_info">
+                    <div class="info_box flex-row">
+                        <div> Mã nhân viên </div>
+                        <input disabled type="text" size="25" value={usr_staffCode} />
                     </div>
-                    <div>
-                        <lightning-combobox name="ticket_type" label="Ticket Type" value={ticket_type}
-                            placeholder="Select an options" options={optTicketType}
-                            onchange={handleChange}></lightning-combobox>
+                    <div class="info_box flex-row">
+                        <div> Email</div>
+                        <input disabled type="email" size="25" value={usr_Email} />
                     </div>
-                    <div>
-                        <lightning-combobox name="Status" label="Status" value={Status} placeholder="Select an options"
-                            options={optStatus} onchange={handleChange}></lightning-combobox>
-                    </div>
-                    <div>
-                        <lightning-combobox name="Category" label="Category" value={Category}
-                            placeholder="Select an options" options={optCategory}
-                            onchange={handleChange}></lightning-combobox>
+                    <div class="info_box flex-row">
+                        <div> Ngày sinh </div>
+                        <input disabled type="date" size="25" value={usr_birthDate} />
                     </div>
                 </div>
-                <div class="wrapper_body_search_user_field flex-row">
-                    <div>
-                        <lightning-input type="date" name="StartDate" label="StartDate"></lightning-input>
+                <div class="wrapper_body_search">
+                    <div class="wrapper_body_search_user_field flex-row">
+                        <div>
+                            <lightning-input data-id="subject" name="subject" onchange={handleChange} type="text"
+                                label="Subject"></lightning-input>
+                        </div>
+                        <div if:true={ticketTypeOptionsLoad}>
+                            <lightning-combobox data-id="ticket_type" name="ticket_type" label="Ticket Type"
+                                value={ticket_type} placeholder="Select an options" options={ticketTypeOptions}
+                                onchange={handleChange}></lightning-combobox>
+                        </div>
+                        <div class="wrapper_body_search_user_field flex-row">
+                            <div if:true={statusOptionsLoad}>
+                                <lightning-combobox data-id="status" name="Status" label="Status" value={Status}
+                                    placeholder="Select an options" options={statusOptions}
+                                    onchange={handleChange}></lightning-combobox>
+                            </div>
+                            <div if:true={categoryOptionsLoad}>
+                                <lightning-combobox data-id="category" name="Category" label="Category" value={Category}
+                                    placeholder="Select an options" options={categoryOptions}
+                                    onchange={handleChange}></lightning-combobox>
+                            </div>
+                        </div>
+
                     </div>
-                    <div>
-                        <lightning-input type="date" name="EndDate" label="EndDate"></lightning-input>
+                    <div class="wrapper_body_search_user_field flex-row">
+                        <div>
+                            <lightning-input data-id="startDate" type="date" name="StartDate"
+                                label="StartDate"></lightning-input>
+                        </div>
+                        <div>
+                            <lightning-input data-id="endDate" type="date" name="EndDate"
+                                label="EndDate"></lightning-input>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-        <div>
-            <div class="wrapper_layout_button_left">
+        <div class=" wrapper_action_btn ">
+            <div class="btn_save">
                 <lightning-button variant="Add" label="Add" onclick={handleClick}></lightning-button>
             </div>
-            <div class="wrapper_layout_button_right">
+            <div class="btn_search ">
                 <lightning-button variant="Search" label=" Search" onclick={handleClick}></lightning-button>
             </div>
         </div>
